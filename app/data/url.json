@@ -1,0 +1,12 @@
+{
+  "domains": {
+    "api": "http://hipops-SAMOMY-backend.com"
+  },
+  "endpoints":{
+    "api":{
+      "products":{
+        "url":"/products"
+      }
+    }
+  }
+}
