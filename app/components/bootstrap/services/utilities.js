@@ -42,7 +42,7 @@
         else {query = '';}
 
         var regEx =//$/;
-        outEndpoint.url = outDomain.replace(regEx,'') + outEndpoint.url.replace('@@','') + query;
+        outEndpoint.url = outDomain.replace(regEx,'').replace('@@','') + outEndpoint.url + query;
         def.resolve(outEndpoint);
       },failure);
       return def.promise;
