@@ -1,6 +1,6 @@
 {
   "domains": {
-    "api": "@@http://localhost:1337"
+    "api": "http://hipops-SAMOMY-backend.com"
   },
   "endpoints":{
     "api":{
