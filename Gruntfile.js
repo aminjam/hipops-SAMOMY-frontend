@@ -7,7 +7,7 @@
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
@@ -34,9 +34,9 @@ module.exports = function (grunt) {
         tasks: ['wiredep']
       },
       js: {
-      files: ['<%= yeoman.app %>/scripts/{,*/}*.js',
-        '<%= yeoman.app %>/modules/**/{,*/}*.js',
-        '<%= yeoman.app %>/components/**/{,*/}*.js'
+        files: ['<%= yeoman.app %>/scripts/{,*/}*.js',
+          '<%= yeoman.app %>/modules/**/{,*/}*.js',
+          '<%= yeoman.app %>/components/**/{,*/}*.js'
         ],
         tasks: ['newer:jshint:all'],
         options: {
@@ -48,7 +48,7 @@ module.exports = function (grunt) {
         tasks: ['newer:jshint:test', 'karma']
       },
       styles: {
-      files: ['<%= yeoman.app %>/styles/{,*/}*.{css,scss}'],
+        files: ['<%= yeoman.app %>/styles/{,*/}*.{css,scss}'],
         tasks: ['newer:copy:styles', 'autoprefixer']
       },
       gruntfile: {
@@ -70,7 +70,7 @@ module.exports = function (grunt) {
     // The actual grunt server settings
     connect: {
       options: {
-        port: process.env.PORT || 9000 ,
+        port: process.env.PORT || 9000,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost',
         livereload: 35729
@@ -78,7 +78,7 @@ module.exports = function (grunt) {
       livereload: {
         options: {
           open: true,
-          middleware: function (connect) {
+          middleware: function(connect) {
             return [
               connect.static('.tmp'),
               connect().use(
@@ -93,7 +93,7 @@ module.exports = function (grunt) {
       test: {
         options: {
           port: process.env.PORT || 9001,
-          middleware: function (connect) {
+          middleware: function(connect) {
             return [
               connect.static('.tmp'),
               connect.static('test'),
@@ -123,9 +123,9 @@ module.exports = function (grunt) {
       all: {
         src: [
           'Gruntfile.js',
-        '<%= yeoman.app %>/scripts/{,*/}*.js',
-        '<%= yeoman.app %>/modules/**/{,*/}*.js',
-        '<%= yeoman.app %>/components/**/{,*/}*.js'
+          '<%= yeoman.app %>/scripts/{,*/}*.js',
+          '<%= yeoman.app %>/modules/**/{,*/}*.js',
+          '<%= yeoman.app %>/components/**/{,*/}*.js'
         ]
       },
       test: {
@@ -169,11 +169,11 @@ module.exports = function (grunt) {
     // Automatically inject Bower components into the app
     wiredep: {
       options: {
-        cwd: '<%= yeoman.app %>'
+        cwd: ''
       },
       app: {
         src: ['<%= yeoman.app %>/index.html'],
-        ignorePath:  /\.\.\//
+        ignorePath: /\.\.\//
       }
     },
 
@@ -213,7 +213,7 @@ module.exports = function (grunt) {
       html: ['<%= yeoman.dist %>/{,*/}*.html'],
       css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
       options: {
-        assetsDirs: ['<%= yeoman.dist %>','<%= yeoman.dist %>/images']
+        assetsDirs: ['<%= yeoman.dist %>', '<%= yeoman.dist %>/images']
       }
     },
 
@@ -318,7 +318,8 @@ module.exports = function (grunt) {
             '*.html',
             'components/**/{,*/}*.html',
             'images/{,*/}*.{webp}',
-            'fonts/*'
+            'fonts/*',
+            'data/*.json'
           ]
         }, {
           expand: true,
@@ -361,28 +362,51 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+    replace: {
+      dist: {
+        options: {
+          patterns: [{
+            json: function(done) {
+              done({
+                'http://localhost:1337': process.env.DOMAINS_API || '@@http://localhost:1337'
+              });
+            }
+          }]
+        },
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['<%= yeoman.dist %>/data/url.json'],
+          dest: '<%= yeoman.dist %>/data/'
+        }]
+      }
     }
   });
 
-  grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
-    if (target === 'dist') {
-      return grunt.task.run(['build', 'connect:dist:keepalive']);
-    }
+  grunt.registerTask('serve', 'Compile then start a connect web server',
+    function(target) {
+      if (target === 'dist') {
+        return grunt.task.run(['build', 'connect:dist:keepalive']);
+      }
 
-    grunt.task.run([
-      'clean:server',
-      'wiredep',
-      'concurrent:server',
-      'autoprefixer',
-      'connect:livereload',
-      'watch'
-    ]);
-  });
+      grunt.task.run([
+        'clean:server',
+        'wiredep',
+        'concurrent:server',
+        'autoprefixer',
+        'connect:livereload',
+        'watch'
+      ]);
+    });
 
-  grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve:' + target]);
-  });
+  grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead',
+    function(target) {
+      grunt.log.warn(
+        'The `server` task has been deprecated. Use `grunt serve` to start a server.'
+      );
+      grunt.task.run(['serve:' + target]);
+    });
 
   grunt.registerTask('test', [
     'clean:server',
@@ -406,7 +430,8 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
-    'htmlmin'
+    'htmlmin',
+    'replace'
   ]);
 
   grunt.registerTask('default', [

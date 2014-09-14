@@ -1,6 +1,6 @@
 {
   "domains": {
-    "profile": "http://localhost:1337",
+    "profile": "@@http://localhost:1337",
     "data": "http://api.data"
   },
   "endpoints":{
